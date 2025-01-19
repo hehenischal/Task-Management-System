@@ -5,3 +5,6 @@ def index(request):
     
 
     return render(request,'employeebase.html')
+
+def manager_index(request):
+    return render(request, 'manager_base.html')
