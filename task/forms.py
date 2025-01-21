@@ -32,8 +32,7 @@ labels = {
             'assigner': 'Assigned By',
             'assignee': 'Assigned To'
         }
-from django import forms
-from .models import CustomUser
+
 
 class AddEmployeeForm(forms.ModelForm):
     class Meta:
