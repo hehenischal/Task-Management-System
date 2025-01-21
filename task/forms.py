@@ -1,6 +1,5 @@
 from django import forms
-<<<<<<< HEAD
-from .models import Task
+from .models import Task,File,CustomUser
 
 class TaskForm(forms.ModelForm):
      class Meta:
@@ -33,11 +32,24 @@ labels = {
             'assigner': 'Assigned By',
             'assignee': 'Assigned To'
         }
-=======
-from .models import File
- 
+from django import forms
+from .models import CustomUser
+
+class AddEmployeeForm(forms.ModelForm):
+    class Meta:
+        model = CustomUser
+        fields = ['username', 'first_name', 'last_name', 'email', 'is_employee', 'is_manager']
+
+    is_employee = forms.BooleanField(required=False)
+    is_manager = forms.BooleanField(required=False)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        
+
+
+
 class FileForm(forms.ModelForm):
     class Meta:
         model = File
         fields = '__all__'
->>>>>>> be2126149f3c27b1dd55ee30d1f43e0a66b3fe8f
