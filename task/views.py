@@ -1,8 +1,7 @@
 from django.shortcuts import render,redirect
 from django.http import HttpResponse
-from django.contrib.auth.decorators import login_required
 from .models import Employee,CustomUser,Task,File
-from .forms import TaskForm, FileForm, AddEmployeeForm
+from .forms import TaskForm,AddEmployeeForm,Fileform,EmployeeForm
 from django.contrib.auth import authenticate, login,logout
 from django.contrib.auth.forms import AuthenticationForm,UserCreationForm,SetPasswordForm
 from django.contrib.auth.decorators import login_required
@@ -102,17 +101,17 @@ def my_task(request):
     context = {
         'employee': employee_obj
     } 
-    return render(request, 'my_tasks.html', context)
+    return render(request, 'my_task.html', context)
 
 def submit_task_file(request):
     if request.method == 'POST':
-        form = FileForm(request.POST, request.FILES)
+        form = Fileform(request.POST, request.FILES)
         if form.is_valid():
             form.instance.employee = request.user
             form.save()
             return redirect('task_list') 
     else:
-        form = FileForm()
+        form = Fileform()
     
     return render(request, 'uploadfile.html', {'form': form})
 

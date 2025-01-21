@@ -1,5 +1,21 @@
 from django import forms
-from .models import Task,File,CustomUser
+from .models import Task,File,CustomUser,Employee
+
+class EmployeeForm(forms.ModelForm):
+     class Meta:
+        model = Task
+        fields = '__all__'
+
+        
+class Fileform (forms.ModelForm):
+     class Meta:
+        model = File
+        fields = '__all__'
+        labels={
+            'file':'upload file',
+            'description':'file description'
+        }
+
 
 class TaskForm(forms.ModelForm):
      class Meta:
@@ -22,7 +38,7 @@ class TaskForm(forms.ModelForm):
             }),
             'assignee': forms.SelectMultiple(attrs={
                 'class': 'form-select', 
-                'size': 5  # Allows multiple selections
+                'size': 5  
             })
         }
 labels = {
@@ -48,7 +64,7 @@ class AddEmployeeForm(forms.ModelForm):
 
 
 
-class FileForm(forms.ModelForm):
+class Fileform(forms.ModelForm):
     class Meta:
         model = File
         fields = '__all__'
