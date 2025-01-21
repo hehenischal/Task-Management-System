@@ -1,5 +1,4 @@
 from django import forms
-<<<<<<< HEAD
 from .models import Task
 
 class TaskForm(forms.ModelForm):
@@ -33,21 +32,3 @@ labels = {
             'assigner': 'Assigned By',
             'assignee': 'Assigned To'
         }
-=======
-from .models import File
- 
-class FileForm(forms.ModelForm):
-    class Meta:
-        model = File
-        fields = '__all__'
-
-class EmployeeForm(forms.ModelForm):
-    class Meta:
-        model = File
-        fields = '__all__'
-
-class EmployeeForm(forms.ModelForm):
-    class Meta:
-        model = File
-        fields = '__all__'
->>>>>>> be2126149f3c27b1dd55ee30d1f43e0a66

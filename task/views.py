@@ -3,7 +3,7 @@ from .models import CustomUser
 from .forms import FileForm
 from django.contrib.auth.decorators import login_required
 from .models import Employee
-from .forms import EmployeeForm
+from .forms import EmployeeForm, TaskForm
 # Create your views here.
 def index(request):
     
