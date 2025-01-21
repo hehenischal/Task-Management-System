@@ -60,6 +60,18 @@ class AddEmployeeForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.fields['is_employee'].required = True
+        self.fields['is_manager'].required = False
+
+    def clean(self):
+        cleaned_data = super().clean()
+        is_employee = cleaned_data.get('is_employee')
+        is_manager = cleaned_data.get('is_manager')
+
+        # Ensure a user can't be both employee and manager at the same time
+        if is_employee and is_manager:
+            raise forms.ValidationError("A user cannot be both employee and manager.")
+        return cleaned_data
         
 
 

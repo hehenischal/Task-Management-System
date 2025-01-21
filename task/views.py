@@ -2,11 +2,12 @@ from django.shortcuts import render,redirect
 from django.http import HttpResponse
 from .models import Employee,CustomUser,Task,File
 from .forms import TaskForm,AddEmployeeForm,Fileform,EmployeeForm
-from django.contrib.auth import authenticate, login,logout
+from django.contrib.auth import authenticate, login,logout,get_user_model
 from django.contrib.auth.forms import AuthenticationForm,UserCreationForm,SetPasswordForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib import messages
+from django.contrib.auth.hashers import check_password
 
 
 
@@ -33,60 +34,62 @@ def add_employee(request):
     if request.method == 'POST':
         form = AddEmployeeForm(request.POST)
         if form.is_valid():
-            form.save() 
-            return redirect('manager_home')  
+           user =  form.save() 
+           user.set_password('defaultpassword')
+           user.save()
+           messages.success(request, "Employee added successfully!")
+           return redirect('manager_home')  
+        
+        else:
+            messages.error(request, "There was an error with the form. Please try again.")
     else:
         form = AddEmployeeForm()
 
     return render(request, 'add_employee.html', {'form': AddEmployeeForm})
 
-
 def login_view(request):
-    if request.user.is_authenticated:
-        return redirect('manager_home')  # Redirect if already logged in
+    if request.method == "POST":
+        username = request.POST.get("username")
+        password = request.POST.get("password")
 
-    if request.method == 'POST':
-        form = AuthenticationForm(request, data=request.POST)
-        
-        if form.is_valid():
-            username = form.cleaned_data.get('username')
-            password = form.cleaned_data.get('password')
+        if not username or not password:
+            messages.error(request, "Both fields are required!")
+            return render(request, "login.html")
 
-            try:
-                user = CustomUser.objects.get(username=username)
-                
-                if user.password:  # User has a password set
-                    # Authenticate and log in
-                    user = authenticate(request, username=username, password=password)
-                    if user is not None:
-                        login(request, user)
-                        messages.success(request, "Login successful!")
-                        return redirect('manager_home')
-                else:
-                    # If no password set, show password form
-                    if 'set_password' in request.POST:
-                        password_form = SetPasswordForm(user, data=request.POST)
-                        if password_form.is_valid():
-                            password_form.save()
-                            login(request, user)
-                            messages.success(request, "Password set successfully!")
-                            return redirect('manager_home')
-                        else:
-                            messages.error(request, "There was an issue with setting the password.")
-                            return render(request, 'login.html', {'form': form, 'password_form': password_form})
+        user = authenticate(request, username=username, password=password)
 
-                    # Redirect to set password if no password exists
-                    password_form = SetPasswordForm(user)
-                    return render(request, 'login.html', {'form': form, 'password_form': password_form})
+        if user is not None:
+            login(request, user)
 
-            except User.DoesNotExist:
-                messages.error(request, "Invalid username or password.")
-                return render(request, 'login.html', {'form': form})
+            # Check if the employee is using the default password
+            if check_password(password, user.password):  
+                return redirect("set_password")  # Redirect to password change page
+            
+            if user.is_staff:  
+                return redirect("manager_home")  # Redirect managers to dashboard
+            else:
+                return redirect("home")  # Redirect employees to home
 
-    else:
-        form = AuthenticationForm()
+        else:
+            messages.error(request, "Invalid username or password!")
 
-    return render(request, 'login.html', {'form': form})
+    return render(request, "login.html")
+
+@login_required
+def set_password(request):
+    if request.method == "POST":
+        new_password = request.POST.get("new_password")
+        confirm_password = request.POST.get("confirm_password")
+
+        if new_password == confirm_password:
+            request.user.set_password(new_password)
+            request.user.save()
+            messages.success(request, "Password updated successfully! Please log in again.")
+            return redirect("login_view")  # Redirect to login
+
+    return render(request, "set_password.html")
+
+
 
 
 def logout_view(request):

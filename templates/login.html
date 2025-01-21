@@ -1,9 +1,14 @@
 {% extends "manager_base.html" %}
 
 {% block content %}
-    <form method="POST">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Login</button>
-    </form> 
+<form method="POST">
+    {% csrf_token %}
+    <label>Username:</label>
+    <input type="text" name="username" required>  <!-- Ensure the name="username" is correct -->
+    
+    <label>Password:</label>
+    <input type="password" name="password" required>  <!-- Ensure the name="password" is correct -->
+    
+    <button type="submit">Login</button>
+</form>
 {% endblock content %}
