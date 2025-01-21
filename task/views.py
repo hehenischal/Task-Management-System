@@ -13,6 +13,20 @@ def index(request):
 def manager_index(request):
     return render(request, 'manager_base.html')
 
+def assign_task(request):
+    if request.method == "POST":
+        form = TaskForm(request.POST)
+       
+        if form.is_valid():
+            form.save()
+            return redirect("manager_home")
+    else:
+        form = TaskForm()
+
+    return render(request, "create_task.html", {"form": TaskForm})
+
+
+
 
 def my_task(request ): 
     employee_obj = request.user
