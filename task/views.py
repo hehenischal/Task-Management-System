@@ -1,9 +1,8 @@
 from django.shortcuts import render,redirect
 from .models import CustomUser 
-from .forms import FileForm
 from django.contrib.auth.decorators import login_required
 from .models import Employee
-from .forms import EmployeeForm, TaskForm
+from .forms import EmployeeForm, TaskForm,Fileform
 # Create your views here.
 def index(request):
     
@@ -33,17 +32,17 @@ def my_task(request ):
     context = {
         'employee': employee_obj
     } 
-    return render(request, 'my_tasks.html', context)
+    return render(request, 'my_task.html', context)
 
 def submit_task_file(request):
     if request.method == 'POST':
-        form = FileForm(request.POST, request.FILES)
+        form = Fileform(request.POST, request.FILES)
         if form.is_valid():
             form.instance.employee = request.user
             form.save()
             return redirect('task_list') 
     else:
-        form = FileForm()
+        form = Fileform()
     
     return render(request, 'uploadfile.html', {'form': form})
 

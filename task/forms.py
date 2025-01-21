@@ -1,5 +1,20 @@
 from django import forms
-from .models import Task
+from .models import Task,Employee,File
+
+class EmployeeForm(forms.ModelForm):
+     class Meta:
+        model = Task
+        fields = '__all__'
+
+        
+class Fileform (forms.ModelForm):
+     class Meta:
+        model = File
+        fields = '__all__'
+        labels={
+            'file':'upload file',
+            'description':'file description'
+        }
 
 class TaskForm(forms.ModelForm):
      class Meta:
@@ -22,7 +37,7 @@ class TaskForm(forms.ModelForm):
             }),
             'assignee': forms.SelectMultiple(attrs={
                 'class': 'form-select', 
-                'size': 5  # Allows multiple selections
+                'size': 5  
             })
         }
 labels = {
