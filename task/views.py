@@ -52,18 +52,19 @@ def login_view(request):
         username = request.POST.get("username")
         password = request.POST.get("password")
 
+        
+
         if not username or not password:
             messages.error(request, "Both fields are required!")
             return render(request, "login.html")
 
         user = authenticate(request, username=username, password=password)
 
-        if user is not None:
-            login(request, user)
 
-            # Check if the employee is using the default password
-            if check_password(password, user.password):  
-                return redirect("set_password")  # Redirect to password change page
+        if user is not None :
+            login(request, user)
+            if password == 'defaultpassword':
+                return redirect('set_password')
             
             if user.is_staff:  
                 return redirect("manager_home")  # Redirect managers to dashboard
@@ -76,18 +77,17 @@ def login_view(request):
     return render(request, "login.html")
 
 @login_required
-def set_password(request):
-    if request.method == "POST":
-        new_password = request.POST.get("new_password")
-        confirm_password = request.POST.get("confirm_password")
+def set_password1(request):
+    form = SetPasswordForm(request.user)
+    if request.method == 'POST':
+        form = SetPasswordForm(request.user, request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('login_view')
+        else:
+            print(form.errors)
 
-        if new_password == confirm_password:
-            request.user.set_password(new_password)
-            request.user.save()
-            messages.success(request, "Password updated successfully! Please log in again.")
-            return redirect("login_view")  # Redirect to login
-
-    return render(request, "set_password.html")
+    return render(request, 'set_password.html', {'form': form})
 
 
 
@@ -136,3 +136,4 @@ def view_profile(request):
         form = EmployeeForm()
 
     return render(request, 'viewprofile.html', {'form': form})
+
