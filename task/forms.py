@@ -4,7 +4,7 @@ from .models import Task,File,CustomUser,Employee
 class EmployeeForm(forms.ModelForm):
      class Meta:
         model = Task
-        fields = '__all__'
+        fields = ['First Name','Last Name','Email','Position','Department','Hiredate','Address','Profile Picture']
 
         
 class Fileform (forms.ModelForm):
