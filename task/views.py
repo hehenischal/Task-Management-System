@@ -92,11 +92,19 @@ def set_password(request):
 
 
 
+
 def logout_view(request):
     logout(request)
     return redirect('login_view') 
 
 
+@login_required
+def to_review(request):
+    if not request.user.is_manager:
+        return redirect('home')
+    
+    tasks = Task.objects.filter(status='to_review')
+    return render(request, 'to_review.html',{'tasks':Task})
 
 
 def my_task(request): 

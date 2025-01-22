@@ -58,10 +58,10 @@ class AddEmployeeForm(forms.ModelForm):
     is_employee = forms.BooleanField(required=False)
     is_manager = forms.BooleanField(required=False)
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields['is_employee'].required = True
-        self.fields['is_manager'].required = False
+    # def __init__(self, *args, **kwargs):
+    #     super().__init__(*args, **kwargs)
+    #     self.fields['is_employee'].required = True
+    #     self.fields['is_manager'].required = False
 
     def clean(self):
         cleaned_data = super().clean()

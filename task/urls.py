@@ -11,7 +11,8 @@ urlpatterns = [
     path('logout_view/', logout_view, name="logout_view"),
     path('set_password/', set_password, name='set_password'),
     path('submit_task/', submit_task_file, name='uploadfile'),
-    path('profile/', view_profile, name='view_profile')
+    path('profile/', view_profile, name='view_profile'),
+    path('to_review/', to_review, name='to_review')
 
    
 ]
