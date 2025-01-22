@@ -19,15 +19,20 @@
             
             <div class="d-flex flex-column">
                 <a href="{% url 'assign_task'  %}" class="text-white p-2 mb-2 rounded-3" style="text-decoration: none;">Assign Task</a>
-                <a href="#" class="text-white p-2 mb-2 rounded-3" style="text-decoration: none;">Add Employee</a>
+                <a href="{% url 'add_employee' %}" class="text-white p-2 mb-2 rounded-3" style="text-decoration: none;">Add Employee</a>
                 <a href="#" class="text-white p-2 mb-2 rounded-3" style="text-decoration: none;">To Review</a>
                 <a href="#" class="text-white p-2 mb-2 rounded-3" style="text-decoration: none;">Completed</a>
             </div>
-            
-            <form method="POST" action="#" class="mt-auto">
-                {% csrf_token %}
-                <button type="submit" class="btn btn-danger w-100 mt-3">Logout</button>
-            </form>
+
+            <!-- Fixing Authentication Conditional -->
+            {% if request.user.is_authenticated %}
+                <form method="POST" action="{% url 'logout_view' %}" class="mt-auto">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger w-100 mt-3">Logout</button>
+                </form>
+            {% else %}
+                <a href="{% url 'login_view' %}" class="btn btn-success w-100 mt-3">Login</a>
+            {% endif %}
         </div>
 
         <!-- Main Content Area -->
