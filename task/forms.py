@@ -1,10 +1,10 @@
 from django import forms
 from .models import Task,File,CustomUser,Employee
-
+forms.Form
 class EmployeeForm(forms.ModelForm):
      class Meta:
         model = Task
-        fields = ['First Name','Last Name','Email','Position','Department','Hiredate','Address','Profile Picture']
+        fields = '__all__'
 
         
 class Fileform (forms.ModelForm):
@@ -25,6 +25,9 @@ class TaskForm(forms.ModelForm):
             'title': forms.TextInput(attrs={
                 'class': 'form-control', 
                 'placeholder': 'Enter task title'
+            }),
+            'description':forms.Textarea(attrs={
+                'class':'form-control'
             }),
             'status': forms.Select(attrs={
                 'class': 'form-select'
@@ -80,3 +83,13 @@ class Fileform(forms.ModelForm):
     class Meta:
         model = File
         fields = '__all__'
+        widgets = {
+            'task': forms.HiddenInput(),
+            'name': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Enter file name'
+            }),
+            'file': forms.FileInput(attrs={
+                'class': 'form-control'
+            })
+        }

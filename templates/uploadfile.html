@@ -4,21 +4,7 @@
     <h3>Submit Completed Task File</h3>
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
-        <div class="form-group">
-            <label for="task">Select Task</label>
-            <select name="task" id="task" class="form-control">
-                {% for task in tasks %}
-                    <option value="{{ task.id }}">{{ task.title }}</option>
-                {% empty %}
-                    <option disabled>No tasks available</option>
-                {% endfor %}
-            </select>
-        </div>
-        
-        <div class="form-group">
-            <label for="file">Choose File</label>
-            <input type="file" name="file" id="file" class="form-control">
-        </div>
+        {{form.as_p}}
         
         <button type="submit" class="btn btn-primary">Submit File</button>
     </form>

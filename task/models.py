@@ -1,12 +1,14 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser, User
+from decouple import config
+from django.core.mail import send_mail
 
 class CustomUser(AbstractUser):
     username = models.CharField(max_length=100, unique=True)
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
     email = models.EmailField(unique=True)
-    is_employee = models.BooleanField(default=False)
+    is_employee = models.BooleanField(default=True)
     is_manager = models.BooleanField(default=False)
 
     def __str__(self):
@@ -32,7 +34,20 @@ class Task(models.Model):
 
     def __str__(self):
         return self.title
+    
+    # def save(self, *args, **kwargs):
+    #     subject = 'Task Completed'
+    #     message = f'Your task{self.title} has updated to the status of {self.status}'
+    #     from_email = config('EMAIL_HOST_USER')  # Sender's email address
+    #     recipient_list = ['task.assignee.email'] # Recipient's email address
+    #     #recipient_list = [task.assignee.email]  # Recipient's email address
+        
+    #     send_mail(subject, message, from_email, recipient_list)
+        
+    #     super().save(*args, **kwargs)
 
+from django.conf import settings
+import os
 class File(models.Model):
     task = models.ForeignKey(Task, on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
@@ -40,6 +55,10 @@ class File(models.Model):
 
     def __str__(self):
         return self.name  
+    
+    def delete(self, *args, **kwargs):
+        os.remove(os.path.join(settings.MEDIA_ROOT, self.file.name))
+        super().delete(*args, **kwargs)
 
 class Employee(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)  

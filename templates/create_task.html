@@ -1,14 +1,12 @@
 {% extends "manager_base.html" %}
 
 {% block content %}
-<div class="container">
     <h3 class="mb-4">Assign a Task</h3>
-    <form method="post" class="bg-white p-4 rounded shadow">
+    <form method="post" class="bg-white rounded shadow">
         {% csrf_token %}
         <div class="mb-3">
             {{ form.as_p }}
         </div>
         <button type="submit" class="btn btn-primary">Submit</button>
     </form>
-</div>
 {% endblock content %}

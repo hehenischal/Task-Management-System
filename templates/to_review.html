@@ -9,6 +9,7 @@
                 <th>Description</th>
                 <th>Assigned To</th>
                 <th>Created At</th>
+                <th>File</th>
                 <th>Action</th>
             </tr>
         </thead>
@@ -20,7 +21,15 @@
                     <td>{{ task.assigned_to.username }}</td>
                     <td>{{ task.created_at }}</td>
                     <td>
+                        {% if task.file %}
+                        <a href="{{ task.file.file.url }}" download class="btn btn-primary btn-sm">Download</a>
+                        {% else %}
+                        No file attached.
+                        {% endif %}
+                    </td>
+                    <td>
                         <a href="{% url 'mark_completed' task.id %}" class="btn btn-success btn-sm">Mark Completed</a>
+                        <a href="{% url 'mark_revision' task.id %}" class="btn btn-danger btn-sm">Need Revision</a>
                     </td>
                 </tr>
             {% empty %}

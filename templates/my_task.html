@@ -9,6 +9,8 @@
                 <th>Due Date</th>
                 <th>Status</th>
                 <th>Priority</th>
+                <th>Actions</th>
+                
             </tr>
         </thead>
         <tbody>
@@ -19,6 +21,14 @@
                     <td>{{ task.due_date }}</td>
                     <td>{{ task.get_status_display }}</td> 
                     <td>{{ task.priority }}</td>
+                    <td>
+                        <a href="{% url 'uploadfile' task.id %}" class="btn btn-sm btn-primary 
+                        {% if task.status == "In review" %}
+                         disabled
+                         {% endif %}
+                        ">submit file</a>
+                        <a href="https://placekittens.com/100/100/" download class="btn btn-sm btn-primary">view</a>
+                    </td>
                 </tr>
             {% empty %}
                 <tr>
