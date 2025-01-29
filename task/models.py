@@ -35,16 +35,16 @@ class Task(models.Model):
     def __str__(self):
         return self.title
     
-    # def save(self, *args, **kwargs):
-    #     subject = 'Task Completed'
-    #     message = f'Your task{self.title} has updated to the status of {self.status}'
-    #     from_email = config('EMAIL_HOST_USER')  # Sender's email address
-    #     recipient_list = ['task.assignee.email'] # Recipient's email address
-    #     #recipient_list = [task.assignee.email]  # Recipient's email address
+    def save(self, *args, **kwargs):
         
-    #     send_mail(subject, message, from_email, recipient_list)
+        subject = 'Task Status Updated'
+        message = f'Your task{self.title} has updated to the status of {self.status}'
+        from_email = config('EMAIL_HOST_USER')  # Sender's email address
+        recipient_list = [user.email for user in self.assignee.all()] # Recipient's email address
+        if recipient_list:
+            send_mail(subject, message, from_email, recipient_list)
+        super().save(*args, **kwargs)        
         
-    #     super().save(*args, **kwargs)
 
 from django.conf import settings
 import os

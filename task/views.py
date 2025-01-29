@@ -48,7 +48,7 @@ def assign_task(request):
     else:
         form = TaskForm()
 
-    return render(request, "create_task.html", {'form': TaskForm})
+    return render(request, "create_task.html", {'form': form})
 
 def add_employee(request):
     if request.method == 'POST':
@@ -65,7 +65,7 @@ def add_employee(request):
     else:
         form = AddEmployeeForm()
 
-    return render(request, 'add_employee.html', {'form': AddEmployeeForm})
+    return render(request, 'add_employee.html', {'form': form})
 
 def login_view(request):
     if request.method == "POST":
@@ -163,10 +163,15 @@ def submit_task_file(request,id):
     obj = Task.objects.get(id=id)
     if obj.status == 'In review':
         return HttpResponse("Task is already in review", status=403)
+        
     if request.method == 'POST':
         form = Fileform(request.POST, request.FILES, initial={'task': obj})
-        if obj.status == 'Need Revision':
-            obj.status = 'In review'
+        if form.is_valid():
+            file_instance = form.save(commit=False)  
+            file_instance.task = obj  
+            file_instance.save()
+
+        obj.status = 'In review'
         obj.save()
         if form.is_valid():
             form.save()
@@ -180,7 +185,7 @@ def submit_task_file(request,id):
 def mark_revision(request, id):
     task = Task.objects.get(id=id)
     if request.user.is_manager:  
-        task.status = "Need Revision"
+        task.status = "Needs revision"
         task.save()
     return redirect('to_review')
 
